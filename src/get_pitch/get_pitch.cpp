@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string.h>
 #include <errno.h>
+#include <math.h>
+
 
 #include "wavfile_mono.h"
 #include "pitch_analyzer.h"
@@ -12,6 +14,7 @@
 
 #define FRAME_LEN   0.030 /* 30 ms. */
 #define FRAME_SHIFT 0.015 /* 15 ms. */
+#define CLIP 0 
 
 using namespace std;
 using namespace upc;
@@ -64,6 +67,15 @@ int main(int argc, const char *argv[]) {
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
+  float AMax = *max_element(x.begin(),x.end());
+	float var = (AMax/100)*CLIP;
+	for (unsigned int i=0; i<x.size(); i++){
+		if (fabs(x[i]) > var){	
+			x[i] = x[i] - var*(fabs(x[i])/x[i]);
+		} else {
+			x[i] = 0;
+		}		
+	}
   
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
@@ -76,6 +88,18 @@ int main(int argc, const char *argv[]) {
   /// \TODO
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
+
+  //Filtro mediana
+  /*int median_size = 5;
+  int median_center = median_size/2;
+  float m_w[median_size];
+  for(unsigned int pos = median_center; pos < f0.size()-median_center; ++pos){
+    for(int med_idx = -median_center; med_idx <= median_center; ++med_idx){
+      m_w[med_idx + median_center] = f0[pos + med_idx];
+    }
+    sort(m_w, m_w+median_size);
+    f0[pos] = m_w[median_center];
+  }*/
 
   // Write f0 contour into the output file
   ofstream os(output_txt);

@@ -1,0 +1,7 @@
+# List of files installed by Meson
+# Does not contain files installed by custom scripts.
+/Users/dmolins/PAV/lib/libpav.a
+/Users/dmolins/PAV/bin/get_pitch
+/Users/dmolins/PAV/bin/pitch_evaluate
+/Users/dmolins/Desktop/david/uni/3B/PAV/lab/p3/html/.doxygen.done
+/Users/dmolins/PAV/bin/run_get_pitch
